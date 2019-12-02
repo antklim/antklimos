@@ -30,3 +30,7 @@ x86_64 = "0.7.7"
 [dependencies.lazy_static]
 version = "1.4.0"
 features = ["spin_no_std"]
+
+[[test]]
+name = "should_panic"
+harness = false
