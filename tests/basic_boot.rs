@@ -4,28 +4,23 @@
 #![test_runner(antklimos::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
-use antklimos::println;
 use core::panic::PanicInfo;
+use antklimos::{println, serial_print, serial_println};
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
-    println!("AntklimOS, version {}", "0.0.1");
-
-    #[cfg(test)]
     test_main();
-
     loop {}
 }
 
-#[cfg(not(test))]
-#[panic_handler]
-fn panic(info: &PanicInfo) -> ! {
-    println!("{}", info);
-    loop {}
-}
-
-#[cfg(test)]
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     antklimos::test_panic_handler(info);
+}
+
+#[test_case]
+fn test_println() {
+    serial_print!("test_println... ");
+    println!("test_println output");
+    serial_println!("[ok]");
 }
