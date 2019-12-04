@@ -35,6 +35,12 @@ pub fn exit_qemu(exit_code: QemuExitCode) {
     }
 }
 
+pub fn halt_loop() -> ! {
+    loop {
+        x86_64::instructions::hlt();
+    }
+}
+
 pub fn test_runner(tests: &[&dyn Fn()]) {
     serial_println!("Running {} tests", tests.len());
     for test in tests {
@@ -47,7 +53,7 @@ pub fn test_panic_handler(info: &PanicInfo) -> ! {
     serial_println!("[failed]\n");
     serial_println!("Error: {}\n", info);
     exit_qemu(QemuExitCode::Failed);
-    loop {}
+    halt_loop();
 }
 
 #[cfg(test)]
@@ -55,7 +61,7 @@ pub fn test_panic_handler(info: &PanicInfo) -> ! {
 pub extern "C" fn _start() -> ! {
     init();
     test_main();
-    loop {}
+    halt_loop();
 }
 
 #[cfg(test)]
